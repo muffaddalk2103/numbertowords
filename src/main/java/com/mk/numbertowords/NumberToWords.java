@@ -4,7 +4,7 @@
 package com.mk.numbertowords;
 
 import com.mk.numbertowords.processor.NumberToWordProcessor;
-import com.mk.numbertowords.processor.impl.HundredsProcessor;
+import com.mk.numbertowords.processor.impl.GreaterThanHundredProcessor;
 
 /**
  * @author muffa
@@ -13,7 +13,7 @@ import com.mk.numbertowords.processor.impl.HundredsProcessor;
 public class NumberToWords {
 
 	public static void main(String[] args) {
-		NumberToWordProcessor numberToWords = new HundredsProcessor();
-		System.out.println(numberToWords.convertNumberToWord("182"));
+		NumberToWordProcessor numberToWords = new GreaterThanHundredProcessor(9);
+		System.out.println(numberToWords.convertNumberToWord(1111111111 + ""));
 	}
 }
