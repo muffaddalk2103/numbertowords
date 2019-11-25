@@ -31,7 +31,7 @@ import com.mk.numbertowords.resources.NumberToWordRestResource;
  */
 @TestInstance(Lifecycle.PER_CLASS)
 public class IntegrationTests extends JerseyTest {
-	public static final String BASE_URI = "http://localhost:8080/";
+	public static final String BASE_URI = "http://localhost:9999/";
 	private HttpServer server;
 
 	@Override
@@ -55,7 +55,7 @@ public class IntegrationTests extends JerseyTest {
 	@Test
 	public void testConvertNumberToWord() {
 		Client client = ClientBuilder.newClient();
-		Response response = client.target("http://localhost:8080/numbertoword").path("123")
+		Response response = client.target("http://localhost:9999/numbertoword").path("123")
 				.request(MediaType.TEXT_PLAIN).get();
 		Assertions.assertEquals(200, response.getStatus());
 		String msg = response.readEntity(String.class);

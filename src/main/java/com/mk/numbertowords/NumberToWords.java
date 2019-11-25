@@ -36,7 +36,7 @@ public class NumberToWords {
 	public static void main(String[] args) throws LifecycleException {
 		LOGGER.info("Starting the app");
 		tomcat = new Tomcat();
-		String webPort = System.getenv("server.port");
+		String webPort = System.getProperty("server.port");
 		if (webPort == null || webPort.isEmpty()) {
 			webPort = "8080";
 		}
