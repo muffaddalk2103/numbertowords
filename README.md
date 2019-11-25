@@ -15,8 +15,7 @@ To run the application, please perform following steps.
 2. Go to folder on local machine where respository was cloned using command prompt/terminal and run command "mvn package" in the project root folder. 
    Note: if build fails due to test cases in IntegrationTests.java, please make sure port 9999 is not already used by some other application. Alternative is to change the port mentioned in BASE_URI variable in IntegrationTests.java.
 3. Go to target folder after completion of step 2 and run command "java -Dserver.port=8085 -jar numbertowords.jar". Value 8085 can be replaced by and port of your choice. -DServer.port variable is optional and if not provided by default server will start on port 8080.
-4. Once application is running, application can be accessed using URL http://localhost:[server.port]/numbertoword/{numbertoconvert} via browser.
-   Using CURL "curl http://localhost:[server.port]/numbertoword/{numbertoconvert}" e.g. "curl http://localhost:8085/numbertoword/123"
+4. Once application is running, application can be accessed using URL http://localhost:[server.port]/numbertoword/{numbertoconvert} via browser.<br>REST API can also be invoked using CURL "curl http://localhost:[server.port]/numbertoword/{numbertoconvert}"<br>e.g. "curl http://localhost:8085/numbertoword/123"
 5. To terminate the application press ctrl+c in command prompt/terminal.
 
 
