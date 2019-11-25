@@ -55,8 +55,7 @@ public class IntegrationTests extends JerseyTest {
 	@Test
 	public void testConvertNumberToWord() {
 		Client client = ClientBuilder.newClient();
-		Response response = client.target("http://localhost:9999/numbertoword").path("123")
-				.request(MediaType.TEXT_PLAIN).get();
+		Response response = client.target(BASE_URI + "numbertoword").path("123").request(MediaType.TEXT_PLAIN).get();
 		Assertions.assertEquals(200, response.getStatus());
 		String msg = response.readEntity(String.class);
 		Assertions.assertEquals("ONE HUNDRED AND TWENTY THREE", msg);
@@ -67,8 +66,7 @@ public class IntegrationTests extends JerseyTest {
 	@Test
 	public void testConvertNumberToWordWhenBadValue() {
 		Client client = ClientBuilder.newClient();
-		Response response = client.target("http://localhost:8080/numbertoword").path("abc")
-				.request(MediaType.TEXT_PLAIN).get();
+		Response response = client.target(BASE_URI + "numbertoword").path("abc").request(MediaType.TEXT_PLAIN).get();
 		Assertions.assertEquals(400, response.getStatus());
 		String msg = response.readEntity(String.class);
 		Assertions.assertEquals(
@@ -81,7 +79,7 @@ public class IntegrationTests extends JerseyTest {
 	@Test
 	public void testConvertNumberToWordWhenNoValue() {
 		Client client = ClientBuilder.newClient();
-		Response response = client.target("http://localhost:8080/numbertoword").request(MediaType.TEXT_PLAIN).get();
+		Response response = client.target(BASE_URI + "numbertoword").request(MediaType.TEXT_PLAIN).get();
 		Assertions.assertEquals(404, response.getStatus());
 		String msg = response.readEntity(String.class);
 		Assertions.assertEquals("Resource not found.", msg);
