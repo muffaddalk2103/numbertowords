@@ -13,7 +13,9 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mk.numbertowords.config.ResourceLoader;
+import com.mk.numbertowords.processor.impl.NumberToWordProcessorImpl;
+import com.mk.numbertowords.resources.BadURIExceptionMapper;
+import com.mk.numbertowords.resources.NumberToWordRestResource;
 
 /**
  * This is the main class which initializes the embedded tomcat server and
@@ -42,7 +44,7 @@ public class NumberToWords {
 		}
 		tomcat.setPort(Integer.valueOf(webPort));
 		Context context = tomcat.addWebapp("", new File(".").getAbsolutePath());
-		Tomcat.addServlet(context, "jersey-container-servlet", resourceConfig());
+		Tomcat.addServlet(context, "jersey-container-servlet", servletContainer());
 		context.addServletMappingDecoded("/*", "jersey-container-servlet");
 		Thread thread = new Thread(() -> {
 			LOGGER.info("Shutting down app");
@@ -60,11 +62,23 @@ public class NumberToWords {
 	}
 
 	/**
+	 * Configures Jersey resources
+	 *
+	 * @return {@link ResourceConfig}
+	 */
+	public static ResourceConfig resourceConfig() {
+		ResourceConfig resourceConfig = new ResourceConfig();
+		resourceConfig.register(new NumberToWordRestResource(new NumberToWordProcessorImpl()));
+		resourceConfig.register(BadURIExceptionMapper.class);
+		return resourceConfig;
+	}
+
+	/**
 	 * Initalizes jerser servlet container
 	 *
 	 * @return {@link ServletContainer}
 	 */
-	private static ServletContainer resourceConfig() {
-		return new ServletContainer(new ResourceConfig(new ResourceLoader().getClasses()));
+	private static ServletContainer servletContainer() {
+		return new ServletContainer(resourceConfig());
 	}
 }

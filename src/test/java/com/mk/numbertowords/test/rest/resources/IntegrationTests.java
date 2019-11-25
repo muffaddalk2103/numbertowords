@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.mk.numbertowords.test.processor;
+package com.mk.numbertowords.test.rest.resources;
 
 import java.net.URI;
 
@@ -13,7 +13,6 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
-import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.After;
 import org.junit.jupiter.api.Assertions;
@@ -22,8 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-import com.mk.numbertowords.resources.BadURIExceptionMapper;
-import com.mk.numbertowords.resources.NumberToWordRestResource;
+import com.mk.numbertowords.NumberToWords;
 
 /**
  * @author muffa
@@ -36,14 +34,12 @@ public class IntegrationTests extends JerseyTest {
 
 	@Override
 	protected Application configure() {
-		ResourceConfig config = new ResourceConfig(NumberToWordRestResource.class, BadURIExceptionMapper.class);
-		return config;
+		return new Application();
 	}
 
 	@BeforeAll
 	public void setup() {
-		final ResourceConfig rc = new ResourceConfig(NumberToWordRestResource.class, BadURIExceptionMapper.class);
-		server = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
+		server = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), NumberToWords.resourceConfig());
 	}
 
 	@Override

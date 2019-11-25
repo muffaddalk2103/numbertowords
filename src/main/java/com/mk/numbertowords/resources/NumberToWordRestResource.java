@@ -3,6 +3,8 @@
  */
 package com.mk.numbertowords.resources;
 
+import java.util.ResourceBundle;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -28,17 +30,19 @@ import com.mk.numbertowords.processor.impl.NumberToWordProcessorImpl;
 public class NumberToWordRestResource {
 	private static final Logger LOGGER = LoggerFactory.getLogger(NumberToWordRestResource.class);
 	private NumberToWordProcessor numberToWordProcessor;
+	private ResourceBundle mybundle;
 
 	/**
 	 * Initializes service class.
 	 */
-	public NumberToWordRestResource() {
-		numberToWordProcessor = new NumberToWordProcessorImpl();
+	public NumberToWordRestResource(NumberToWordProcessor numberToWordProcessor) {
+		mybundle = ResourceBundle.getBundle("application");
+		this.numberToWordProcessor = numberToWordProcessor;
 	}
 
 	/**
 	 * Calls {@link NumberToWordProcessorImpl} to convert provided number to words.
-	 * 
+	 *
 	 * @param value number to be processed
 	 * @return error message or converted number in words.
 	 */
@@ -55,8 +59,7 @@ public class NumberToWordRestResource {
 			return Response.status(Status.BAD_REQUEST).entity(iaex.getMessage()).build();
 		} catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
-			return Response.status(Status.INTERNAL_SERVER_ERROR)
-					.entity("We are facing technical issues right now, please try again later.").build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(mybundle.getString("system.error")).build();
 		}
 		return Response.ok(output, MediaType.TEXT_PLAIN).build();
 	}

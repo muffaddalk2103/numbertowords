@@ -85,6 +85,11 @@ public class NumberToWordProcessorImplTest {
 	}
 
 	@Test
+	public void testConvertToNumberWhenValueIsEmpty() {
+		Assertions.assertThrows(IllegalArgumentException.class, () -> numerToWordProcessor.convertNumberToWord(""));
+	}
+
+	@Test
 	public void testConvertToNumberWhenValueIsNotAnINteger() {
 		Assertions.assertThrows(IllegalArgumentException.class,
 				() -> numerToWordProcessor.convertNumberToWord("10.00"));
@@ -99,5 +104,10 @@ public class NumberToWordProcessorImplTest {
 	public void testConvertToNumberWhenValueIsNotInRange() {
 		Assertions.assertThrows(IllegalArgumentException.class,
 				() -> numerToWordProcessor.convertNumberToWord("100000000000000000000000"));
+	}
+
+	@Test
+	public void testConvertToNumberWhenValueIsNull() {
+		Assertions.assertThrows(IllegalArgumentException.class, () -> numerToWordProcessor.convertNumberToWord(null));
 	}
 }
