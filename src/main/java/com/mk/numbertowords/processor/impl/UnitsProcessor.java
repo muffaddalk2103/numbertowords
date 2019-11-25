@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import com.mk.numbertowords.processor.NumberToWordProcessor;
 
 /**
+ * Processes values in range of 0 to 19
+ *
  * @author muffa
  *
  */
@@ -18,9 +20,15 @@ public class UnitsProcessor implements NumberToWordProcessor {
 			"NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FIURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN",
 			"NINETEEN" };
 
+	/**
+	 * Processes values in range of 0 to 19
+	 */
 	@Override
 	public String convertNumberToWord(String value) {
 		LOGGER.info("inside convertNumberToWord");
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("processing value " + value);
+		}
 		int intValue;
 		try {
 			intValue = Math.abs(Integer.valueOf(value));

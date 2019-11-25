@@ -9,53 +9,65 @@ import org.slf4j.LoggerFactory;
 import com.mk.numbertowords.processor.NumberToWordProcessor;
 
 /**
+ * Processes numbers less than 999.
+ *
  * @author muffa
  *
  */
 public class HundredsProcessor implements NumberToWordProcessor {
 	private static final Logger LOGGER = LoggerFactory.getLogger(HundredsProcessor.class);
 	private NumberToWordProcessor tensProcessor;
+	private String separator;
 
-	public HundredsProcessor() {
-		this(new TensProcessor());
+	/**
+	 * Takes a separator and initializes {@link TensProcessor}. Separator for
+	 * numbers greater than 999 is empty for values below 999 it should be AND
+	 *
+	 * @param separator used for formatting values
+	 */
+	public HundredsProcessor(String separator) {
+		this.tensProcessor = new TensProcessor();
+		this.separator = separator;
 	}
 
-	public HundredsProcessor(NumberToWordProcessor tensProcessor) {
-		this.tensProcessor = tensProcessor;
-	}
-
+	/**
+	 * Processes values below 999
+	 */
 	@Override
 	public String convertNumberToWord(String value) {
 		LOGGER.info("inside convertNumberToWord");
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("processing value " + value);
+		}
 		int intValue;
-		String unitsOutput = null;
-		String tensOutput = null;
+		String output;
+		String unitsOutput = "";
+		String tensOutput = "";
 		try {
 			intValue = Math.abs(Integer.valueOf(value));
 			if (intValue > 999) {
 				throw new IllegalArgumentException("Unsupported number " + value);
 			}
-			int mod = intValue % 100;
-			int divident = intValue / 100;
-			if (divident > 0) {
-				tensOutput = tensProcessor.convertNumberToWord(divident + "");
-				if (mod > 0) {
-					unitsOutput = tensProcessor.convertNumberToWord(mod + "");
-				}
-			} else {
-				unitsOutput = tensProcessor.convertNumberToWord("" + mod);
+			int modulus = intValue % 100;
+			int quotient = intValue / 100;
+			if (quotient > 0) {
+				tensOutput = tensProcessor.convertNumberToWord(String.valueOf(quotient));
+			}
+			if (intValue == 0 || modulus > 0) {
+				unitsOutput = tensProcessor.convertNumberToWord(String.valueOf(modulus));
 			}
 		} catch (NumberFormatException nfex) {
 			LOGGER.error(nfex.getMessage(), nfex);
 			throw new IllegalArgumentException("Value isn't a valid number " + value);
 		}
-		if (tensOutput != null && unitsOutput != null) {
-			return tensOutput + " HUNDRED " + unitsOutput;
-		} else if (tensOutput != null && unitsOutput == null) {
-			return tensOutput + " HUNDRED";
+		if (!"".equals(tensOutput) && !"".equals(unitsOutput)) {
+			output = tensOutput + " HUNDRED " + separator + unitsOutput;
+		} else if (!"".equals(tensOutput) && "".equals(unitsOutput)) {
+			output = tensOutput + " HUNDRED";
 		} else {
-			return unitsOutput;
+			output = separator + unitsOutput;
 		}
+		return output;
 	}
 
 }

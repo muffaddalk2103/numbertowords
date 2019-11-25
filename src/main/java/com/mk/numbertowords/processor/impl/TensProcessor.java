@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import com.mk.numbertowords.processor.NumberToWordProcessor;
 
 /**
+ * Processes values in range of 0 to 99
+ *
  * @author muffa
  *
  */
@@ -26,38 +28,48 @@ public class TensProcessor implements NumberToWordProcessor {
 		this.unitsProcessor = unitsProcessor;
 	}
 
+	/**
+	 * Processes values in range of 0 to 99
+	 */
 	@Override
 	public String convertNumberToWord(String value) {
 		LOGGER.info("inside convertNumberToWord");
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("processing value " + value);
+		}
 		int intValue;
-		String unitsOutput = null;
-		String tensOutput = null;
+		String output;
+		String unitsOutput = "";
+		String tensOutput = "";
 		try {
 			intValue = Math.abs(Integer.valueOf(value));
 			if (intValue > 99) {
 				throw new IllegalArgumentException("Unsupported number " + value);
 			}
-			int mod = intValue % 10;
-			int divident = intValue / 10;
-			if (divident > 1) {
-				tensOutput = TENS[divident];
-				if (mod > 0) {
-					unitsOutput = unitsProcessor.convertNumberToWord(mod + "");
+			int modulus = intValue % 10;
+			int quotient = intValue / 10;
+			if (quotient > 1) {
+				tensOutput = TENS[quotient];
+				/* For values in range of 20 to 99 */
+				if (modulus > 0) {
+					unitsOutput = unitsProcessor.convertNumberToWord(String.valueOf(modulus));
 				}
 			} else {
-				unitsOutput = unitsProcessor.convertNumberToWord("" + intValue);
+				/* for values in range of 0 to 19 */
+				unitsOutput = unitsProcessor.convertNumberToWord(String.valueOf(intValue));
 			}
 		} catch (NumberFormatException nfex) {
 			LOGGER.error(nfex.getMessage(), nfex);
 			throw new IllegalArgumentException("Value isn't a valid number " + value);
 		}
-		if (tensOutput != null && unitsOutput != null) {
-			return tensOutput + " " + unitsOutput;
-		} else if (tensOutput != null && unitsOutput == null) {
-			return tensOutput;
+		if (!"".equals(tensOutput) && !"".equals(unitsOutput)) {
+			output = tensOutput + " " + unitsOutput;
+		} else if (!"".equals(tensOutput) && "".equals(unitsOutput)) {
+			output = tensOutput;
 		} else {
-			return unitsOutput;
+			output = unitsOutput;
 		}
+		return output;
 	}
 
 }

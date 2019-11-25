@@ -10,25 +10,37 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import com.mk.numbertowords.processor.NumberToWordProcessor;
-import com.mk.numbertowords.processor.impl.HundredsProcessor;
+import com.mk.numbertowords.processor.impl.HundredPlusProcessor;
 
 /**
  * @author muffa
  *
  */
 @TestInstance(Lifecycle.PER_CLASS)
-public class HundredsProcessorTest {
+public class HundredPlusProcessorTest {
 
 	private NumberToWordProcessor numerToWordProcessor;
 
 	@BeforeAll
 	public void setup() {
-		numerToWordProcessor = new HundredsProcessor("");
+		numerToWordProcessor = new HundredPlusProcessor(9);
 	}
 
 	@Test
 	public void testConvertToNumber() {
 		Assertions.assertEquals(numerToWordProcessor.convertNumberToWord("100"), "ONE HUNDRED");
+	}
+
+	@Test
+	public void testConvertToNumberWhenIntegerMaxValue() {
+		Assertions.assertEquals(numerToWordProcessor.convertNumberToWord(Integer.MAX_VALUE + ""),
+				"TWO BILLION ONE HUNDRED FORTY SEVEN MILLION FOUR HUNDRED EIGHTY THREE THOUSAND SIX HUNDRED FORTY SEVEN");
+	}
+
+	@Test
+	public void testConvertToNumberWhenIntegerMinValue() {
+		Assertions.assertEquals(numerToWordProcessor.convertNumberToWord(Integer.MIN_VALUE + ""),
+				"TWO BILLION ONE HUNDRED FORTY SEVEN MILLION FOUR HUNDRED EIGHTY THREE THOUSAND SIX HUNDRED FORTY EIGHT");
 	}
 
 	@Test
@@ -57,11 +69,6 @@ public class HundredsProcessorTest {
 	}
 
 	@Test
-	public void testConvertToNumberWhenValueBeyond99() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> numerToWordProcessor.convertNumberToWord("1000"));
-	}
-
-	@Test
 	public void testConvertToNumberWhenValueHasHundreds() {
 		Assertions.assertEquals(numerToWordProcessor.convertNumberToWord("515"), "FIVE HUNDRED FIFTEEN");
 	}
@@ -69,6 +76,11 @@ public class HundredsProcessorTest {
 	@Test
 	public void testConvertToNumberWhenValueHasTens() {
 		Assertions.assertEquals(numerToWordProcessor.convertNumberToWord("45"), "FORTY FIVE");
+	}
+
+	@Test
+	public void testConvertToNumberWhenValueHasThousands() {
+		Assertions.assertEquals(numerToWordProcessor.convertNumberToWord("5150"), "FIVE THOUSAND ONE HUNDRED FIFTY");
 	}
 
 	@Test
